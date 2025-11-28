@@ -1,7 +1,7 @@
 import { Table, Input, Button, Form } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function Deferrals({ activeTab }) {
+export default function Deferrals({ activeTab, deferralData }) {
   const [deferrals, setDeferrals] = useState([
     {
       loanNo: "LN001",
@@ -22,6 +22,20 @@ export default function Deferrals({ activeTab }) {
   ]);
 
   const [form] = Form.useForm();
+
+  // ⭐ Auto-fill form fields when deferralData changes
+  useEffect(() => {
+    if (activeTab === "Create Deferral" && deferralData) {
+      form.setFieldsValue({
+        loanNo: deferralData.loanNo || "",
+        customer: deferralData.customer || "",
+        document: deferralData.document || "",
+        dclNo: deferralData.dclNo || "",
+        duration: "",
+        reason: "",
+      });
+    }
+  }, [activeTab, deferralData, form]);
 
   const handleCreateDeferral = (values) => {
     const newDeferral = { ...values, status: "Pending" };
@@ -47,7 +61,7 @@ export default function Deferrals({ activeTab }) {
     },
   ];
 
-  // ⭐ NEW TAB — Create Deferral
+  // ⭐ Create Deferral Tab
   if (activeTab === "Create Deferral") {
     return (
       <Form
@@ -69,6 +83,9 @@ export default function Deferrals({ activeTab }) {
         >
           <Input />
         </Form.Item>
+        <Form.Item name="dclNo" label="DCL Number">
+          <Input disabled />
+        </Form.Item>
         <Form.Item name="duration" label="Duration" rules={[{ required: true }]}>
           <Input placeholder="e.g., 1 Month" />
         </Form.Item>
@@ -84,7 +101,7 @@ export default function Deferrals({ activeTab }) {
     );
   }
 
-  // ⭐ NEW TAB — Pending Approval
+  // ⭐ Pending Approval Tab
   if (activeTab === "Pending Approval") {
     return (
       <Table

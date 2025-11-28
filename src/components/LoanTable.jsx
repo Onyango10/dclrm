@@ -14,7 +14,6 @@ export default function LoanTable() {
             <th className="pb-3">Loan No</th>
             <th className="pb-3">Customer</th>
             <th className="pb-3">Loan Type</th>
-            <th className="pb-3">Progress</th>
             <th className="pb-3">Action</th>
           </tr>
         </thead>
